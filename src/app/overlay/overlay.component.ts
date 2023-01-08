@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Overlay,
+  OverlayConfig,
+} from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { CardComponent } from '../observer/card/card.component';
 
 @Component({
   selector: 'app-overlay',
@@ -6,7 +12,46 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./overlay.component.scss'],
 })
 export class OverlayComponent implements OnInit {
-  constructor() {}
+  @ViewChild('overlayTemplate') overlayTemplate: any;
+  constructor(private overlay: Overlay) {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
+
+  openFromComponent() {
+    const overlayRef = this.overlay.create({
+      hasBackdrop: true,
+      // backdropClass: 'overlay-backdrop',
+      panelClass: 'overlay-panel',
+      positionStrategy: this.overlay
+        .position()
+        .global()
+        .centerHorizontally()
+        .centerVertically(),
+    });
+    const dialogPortal = new ComponentPortal(CardComponent);
+    overlayRef.attach(dialogPortal);
+    overlayRef.backdropClick().subscribe(() => overlayRef.detach());
+  }
+
+  openFromTemplate() {
+    const positionStrategy = this.overlay
+      .position()
+      .global()
+      .centerHorizontally()
+      .centerVertically();
+
+    const overlayConfig = new OverlayConfig({
+      panelClass: 'overlay-panel',
+      positionStrategy,
+    });
+
+    overlayConfig.hasBackdrop = true;
+
+    const overlayRef = this.overlay.create(overlayConfig);
+
+    overlayRef.attach(this.overlayTemplate);
+    overlayRef.backdropClick().subscribe(() => {
+      overlayRef.dispose();
+    });
+  }
 }

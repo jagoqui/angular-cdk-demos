@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-observer',
   templateUrl: './observer.component.html',
-  styleUrls: ['./observer.component.scss']
+  styleUrls: ['./observer.component.scss'],
 })
-export class ObserverComponent implements OnInit {
+export class ObserverComponent {
+  isFirstShowed = true;
 
-  constructor() { }
-
-  ngOnInit() {
+  toggleTemplate() {
+    this.isFirstShowed = !this.isFirstShowed;
   }
-
 }
